@@ -1,11 +1,13 @@
 import numpy as np
 import pandas as pd
+import gunicorn 
 
 import plotly.express as px
 
 from dash import Dash, dcc, html, Input, Output
 
 app = Dash(__name__)
+server = app.server 
 
 df_mosty = pd.read_csv('./Data/sr_co_most_dc_2021-01-01.csv',
                       sep=';',
