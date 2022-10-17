@@ -88,12 +88,19 @@ app.layout = html.Div(children=[
             html.Br(),
             html.Label('Zdroj údajov: '),
             dcc.Link(
-                html.A('štatistické výstupy SSC.'),
+                html.A('štatistické výstupy SSC'),
                        href='https://www.cdb.sk/sk/statisticke-vystupy.alej'
             )
         ], style={ 'display':'inline-block',
                    'padding':'20px'})
-    ], style={'display':'flex', 'padding':'10px'})
+    ], style={'display':'flex', 'padding':'10px'}),
+
+    html.Div(children=[
+        dcc.Link(
+            html.A('View source'),
+                   href='https://github.com/pturzak/mapa_mostov_sk'
+        )
+    ])
 ])
 
 @app.callback(
