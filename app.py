@@ -29,9 +29,9 @@ app.layout = html.Div(children=[
         html.Div(children=[
             html.Label('Stav v roku'),
             dcc.Slider(
-                2021, 2022, 2,
+                2012, 2022, 11,
                 value=2022,
-                marks={2021:'2021', 2022:'2022'},
+                marks={2012:'2012', 2021:'2021', 2022:'2022'},
                 id='year-slider'
             ),
             html.Br(),
