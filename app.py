@@ -9,49 +9,12 @@ from dash import Dash, dcc, html, Input, Output
 app = Dash(__name__)
 server = app.server 
 
-df_mosty = pd.read_csv('./Data/sr_co_most_dc_2021-01-01.csv',
-                      sep=';',
-                      encoding='cp1250')
-
-# keep only some columns
-df_mosty = df_mosty[
-    ['Trieda cesty', 'Číslo cesty', 'Správcovské číslo mostu',
-     'Identifikačné číslo mostu', 'rok postavenia',
-     'stavebný stav - kód', 'Stavebný stav',
-     'LongitudeE', 'LatitudeN']
-]
-
-# rename columns
-df_mosty.columns = ['ck_trieda', 'ck_cislo', 'spravcovske_cislo',
-     'ID_most', 'rok_postavenia',
-     'stav_kod', 'stav_slovom',
-     'lon', 'lat']
-
-# clean the technical condition columns
-df_mosty['stav_kod'] = df_mosty['stav_kod'].replace(np.nan, -1)
-df_mosty['stav_kod'] = df_mosty['stav_kod'].astype(int)
-df_mosty = df_mosty.sort_values(by='stav_kod', ascending=True)
-df_mosty['stav_kod'] = df_mosty['stav_kod'].astype(str)
-
-df_mosty['stav_slovom'] =  df_mosty['stav_slovom'].replace(np.nan, 'Neznámy')
-
-# clean road category values
-df_mosty['ck_trieda'] = df_mosty['ck_trieda'].replace(
-    {
-        'diaľnica':'Diaľnica',
-        'privádzač diaľničný':'Diaľnica',
-        'cesta I. triedy':'Cesta I. triedy',
-        'cesta II. triedy':'Cesta II. triedy',
-        'II. trieda - miestna zberná (MZ)':'Cesta II. triedy',
-        'cesta III. triedy':'Cesta III. triedy',
-        'III. trieda - miestna obslužná (MO)':'Cesta III. triedy',
-        'miestna neurčená':'Miestna cesta'
-    }
-)
-
+df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
+                       sep=',',
+                       encoding='utf-8')
 
 app.layout = html.Div(children=[
-    html.H1(children='Stav mostov v 2021'),
+    html.H1(children='Stav mostov'),
 
     html.Div(children=[
         html.Div(children=[
@@ -61,33 +24,39 @@ app.layout = html.Div(children=[
         ], style={ 'display':'inline-block'}),
 
         html.Div(children=[
-            html.Label('Kategoria cesty'),
+            html.Label('Stav v roku'),
+            dcc.Slider(
+                2021, 2022, 2,
+                value=2022,
+                marks={2021:'2021', 2022:'2022'},
+                id='year-slider'
+            ),
+            html.Br(),
 
+            html.Label('Kategoria cesty'),
             dcc.Dropdown(
                 df_mosty['ck_trieda'].unique(),
                 df_mosty['ck_trieda'].unique(),
                 multi=True,
                 id='plot-road-cat-shown'
             ),
-
             html.Br(),
 
             html.Label('Technicky stav'),
-
             dcc.Dropdown(
                 df_mosty['stav_slovom'].unique(),
                 df_mosty['stav_slovom'].unique(),
                 multi=True,
                 id='plot-states-shown'
             ),
-
             html.Br(),
+
             html.Label('Zobrazujem '),
             html.Label(id='bridge-count'),
             html.Label(' mostov.'),
+            html.Br(),
+            html.Br(),
 
-            html.Br(),
-            html.Br(),
             html.Label('Zdroj údajov: '),
             dcc.Link(
                 html.A('štatistické výstupy SSC'),
@@ -108,10 +77,12 @@ app.layout = html.Div(children=[
 @app.callback(
     Output('plot-scatter-bridges', 'figure'),
     Input('plot-states-shown', 'value'),
-    Input('plot-road-cat-shown', 'value'))
-def update_plot(states_shown, road_cat_shown):
+    Input('plot-road-cat-shown', 'value'),
+    Input('year-slider', 'value'))
+def update_plot(states_shown, road_cat_shown, year):
     df_plotted = df_mosty[df_mosty['stav_slovom'].isin(states_shown)\
-                          & df_mosty['ck_trieda'].isin(road_cat_shown)]
+                          & df_mosty['ck_trieda'].isin(road_cat_shown)\
+                          & (df_mosty['rok_data']==year)]
     fig = px.scatter_mapbox(
         df_plotted,
         lat='lat',
@@ -138,10 +109,12 @@ def update_plot(states_shown, road_cat_shown):
 @app.callback(
     Output('bridge-count', 'children'),
     Input('plot-states-shown', 'value'),
-    Input('plot-road-cat-shown', 'value'))
-def update_bridge_count(states_shown, road_cat_shown):
+    Input('plot-road-cat-shown', 'value'),
+    Input('year-slider', 'value'))
+def update_bridge_count(states_shown, road_cat_shown, year):
     df_plotted = df_mosty[df_mosty['stav_slovom'].isin(states_shown)\
-                          & df_mosty['ck_trieda'].isin(road_cat_shown)]
+                          & df_mosty['ck_trieda'].isin(road_cat_shown)\
+                          & (df_mosty['rok_data']==year)]
 
     return df_plotted.shape[0]
 
