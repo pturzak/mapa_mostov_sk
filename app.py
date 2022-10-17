@@ -31,7 +31,7 @@ app.layout = html.Div(children=[
             dcc.Slider(
                 2012, 2022, 11,
                 value=2022,
-                marks={2012:'2012', 2021:'2021', 2022:'2022'},
+                marks={2012:'2012', 2017:'2017', 2021:'2021', 2022:'2022'},
                 id='year-slider'
             ),
             html.Br(),
