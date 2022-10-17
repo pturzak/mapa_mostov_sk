@@ -105,7 +105,7 @@ def update_plot(states_shown, road_cat_shown, year):
             'Neznámy': 'gray'
         }
     )
-    fig.update_layout(mapbox_style='open-street-map')
+    fig.update_layout(mapbox_style='carto-positron')
 
     return fig
 
