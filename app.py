@@ -13,6 +13,9 @@ df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
                        sep=',',
                        encoding='utf-8')
 
+df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
+                                ascending=[True, True])
+
 app.layout = html.Div(children=[
     html.H1(children='Stav mostov'),
 
