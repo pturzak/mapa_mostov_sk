@@ -3,6 +3,7 @@ import pandas as pd
 import gunicorn 
 
 import plotly.express as px
+import plotly.graph_objects as go
 
 from dash import Dash, dcc, html, Input, Output
 
@@ -31,7 +32,8 @@ app.layout = html.Div(children=[
             dcc.Slider(
                 2012, 2022, 11,
                 value=2022,
-                marks={2012:'2012', 2017:'2017', 2021:'2021', 2022:'2022'},
+                marks={2012:'2012', 2015:'2015', 2017:'2017',
+                       2020:'2020', 2021:'2021', 2022:'2022'},
                 id='year-slider'
             ),
             html.Br(),
@@ -105,7 +107,16 @@ def update_plot(states_shown, road_cat_shown, year):
             'Neznámy': 'gray'
         }
     )
-    fig.update_layout(mapbox_style='carto-positron')
+    # fig.update_layout(mapbox_style='carto-positron')
+    fig.update_layout(mapbox_style='carto-positron',
+                      mapbox=dict(
+                          zoom=6.7,
+                          center=go.layout.mapbox.Center(
+                              lat=48.8,
+                              lon=19.9
+                          )
+                        )
+                      )
 
     return fig
 
