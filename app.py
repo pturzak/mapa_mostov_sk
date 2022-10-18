@@ -16,6 +16,12 @@ df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
 
 df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
                                 ascending=[True, True])
+slider_marks = dict(
+    zip(
+        [x for x in range(2012, 2023, 1)],
+        [str(x) for x in range(2012, 2023, 1)]
+    )
+)
 
 app.layout = html.Div(children=[
     html.H1(children='Stav mostov'),
@@ -32,8 +38,7 @@ app.layout = html.Div(children=[
             dcc.Slider(
                 2012, 2022, 11,
                 value=2022,
-                marks={2012:'2012', 2015:'2015', 2017:'2017',
-                       2020:'2020', 2021:'2021', 2022:'2022'},
+                marks=slider_marks,
                 id='year-slider'
             ),
             html.Br(),
