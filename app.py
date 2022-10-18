@@ -99,13 +99,23 @@ def update_plot(states_shown, road_cat_shown, year):
         color_discrete_map={
             'Bezchybný': 'forestgreen',
             'Veľmi dobrý': 'forestgreen',
-            'Dobrý': 'forestgreen',
+            'Dobrý': 'limegreen',
             'Uspokojivý': 'gold',
             'Zlý': 'orangered',
             'Veľmi zlý': 'firebrick',
             'Havarijný': 'black',
             'Neznámy': 'gray'
         }
+        # color_discrete_map={
+        #     'Bezchybný': '#006837',
+        #     'Veľmi dobrý': '#4bb05c',
+        #     'Dobrý': '#b7e075',
+        #     'Uspokojivý': '#fffebe',
+        #     'Zlý': '#ea5739',
+        #     'Veľmi zlý': '#a50026',
+        #     'Havarijný': 'black',
+        #     'Neznámy': 'gray'
+        # }
     )
     # fig.update_layout(mapbox_style='carto-positron')
     fig.update_layout(mapbox_style='carto-positron',
