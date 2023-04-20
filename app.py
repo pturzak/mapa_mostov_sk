@@ -18,8 +18,8 @@ df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
                                 ascending=[True, True])
 slider_marks = dict(
     zip(
-        [x for x in range(2012, 2023, 1)],
-        [str(x) for x in range(2012, 2023, 1)]
+        [x for x in range(2012, 2024, 1)],
+        [str(x) for x in range(2012, 2024, 1)]
     )
 )
 
@@ -36,8 +36,8 @@ app.layout = html.Div(children=[
         html.Div(children=[
             html.Label('Stav v roku'),
             dcc.Slider(
-                2012, 2022, 11,
-                value=2022,
+                2012, 2024, 12,
+                value=2023,
                 marks=slider_marks,
                 id='year-slider'
             ),
