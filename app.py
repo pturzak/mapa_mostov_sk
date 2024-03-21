@@ -9,14 +9,14 @@ from dash import Dash, dcc, html, Input, Output
 
 app = Dash(__name__)
 server = app.server 
-
+    
 df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
                        sep=',',
                        encoding='utf-8')
 
 df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
                                 ascending=[True, True])
-years_available = [x for x in range(2012, 2024, 1)]
+years_available = [x for x in range(2012, 2025, 1)]
 
 app.layout = html.Div(children=[
     html.H3(children='Stav mostov podľa cestnej databanky'),
@@ -33,7 +33,7 @@ app.layout = html.Div(children=[
                 html.Label('Stav v roku'),
                 dcc.Dropdown(
                     options=years_available,
-                    value=2023,
+                    value=2024,
                     multi=False,
                     id='year-shown'
                 ),
