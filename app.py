@@ -72,6 +72,11 @@ app.layout = html.Div(children=[
                     html.A('štatistické výstupy SSC'),
                     href='https://www.cdb.sk/sk/statisticke-vystupy.alej'
                 ),
+                html.Label(', '),
+                dcc.Link(
+                    html.A('WFS služba cestných objektov'),
+                    href='https://www.cdb.sk/sk/poskytovanie-udajov/poskytovanie-vektorovych-udajov-CTEPK/mapove-sluzby.alej'
+                ),
                 html.Br(),
 
                 dcc.Link(
