@@ -5,7 +5,7 @@ import gunicorn
 import plotly.express as px
 import plotly.graph_objects as go
 
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, State
 
 app = Dash(__name__)
 server = app.server 
@@ -17,6 +17,10 @@ df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
 df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
                                 ascending=[True, True])
 years_available = [x for x in range(2012, 2025, 1)]
+
+default_zoom = 6.7
+default_lat = 48.8
+default_lon = 19.7
 
 app.layout = html.Div(children=[
     html.H3(children='Stav mostov podľa cestnej databanky'),
@@ -82,10 +86,11 @@ app.layout = html.Div(children=[
 
 @app.callback(
     Output('plot-scatter-bridges', 'figure'),
-    Input('plot-states-shown', 'value'),
+    [Input('plot-states-shown', 'value'),
     Input('plot-road-cat-shown', 'value'),
-    Input('year-shown', 'value'))
-def update_plot(states_shown, road_cat_shown, year):
+    Input('year-shown', 'value')],
+    [State('plot-scatter-bridges', 'figure')])
+def update_plot(states_shown, road_cat_shown, year, prev_figure):
     df_plotted = df_mosty[df_mosty['stav_slovom'].isin(states_shown)\
                           & df_mosty['ck_trieda'].isin(road_cat_shown)\
                           & (df_mosty['rok_data']==year)]
@@ -117,22 +122,41 @@ def update_plot(states_shown, road_cat_shown, year):
         # }
     )
     # fig.update_layout(mapbox_style='carto-positron')
-    # default view
     # turn off interaction with legend
     fig.update_layout(mapbox_style='carto-positron',
-                      mapbox=dict(
-                          zoom=6.7,
-                          center=go.layout.mapbox.Center(
-                              lat=48.8,
-                              lon=19.7
-                          )
-                        ),
                       legend=dict(
                           itemclick=False,
                           itemdoubleclick=False,
                           title='Technický stav'
+                        )
                       )
-                      )
+    # retain zoom and center even when the Input changes
+    if prev_figure\
+        and ('layout' in prev_figure)\
+        and ('mapbox' in prev_figure['layout']):
+
+        fig.update_layout(
+            mapbox=dict(
+                    zoom=prev_figure['layout']['mapbox'].get('zoom',
+                                                             default_zoom),
+                    center=prev_figure['layout']['mapbox']\
+                                .get('center',
+                                     {'lat': default_lat,
+                                      'lon': default_lon}
+                                )
+            ),
+        )
+
+    else:
+        fig.update_layout(
+            mapbox=dict(
+                zoom=default_zoom,
+                center=go.layout.mapbox.Center(
+                    lat=default_lat,
+                    lon=default_lon
+                )
+            ),
+        )
 
     return fig
 
