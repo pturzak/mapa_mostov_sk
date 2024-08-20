@@ -16,6 +16,8 @@ df_mosty = pd.read_csv('./Data/sr_mosty_all.csv',
 
 df_mosty = df_mosty.sort_values(by=['rok_data', 'stav_kod'],
                                 ascending=[True, True])
+df_mosty['size_pt'] = 6
+
 years_available = [x for x in range(2012, 2025, 1)]
 
 default_zoom = 6.7
@@ -105,6 +107,8 @@ def update_plot(states_shown, road_cat_shown, year, prev_figure):
         lon='lon',
         hover_data=['ID_most', 'ck_trieda', 'rok_postavenia', 'stav_slovom'],
         color='stav_slovom',
+        size='size_pt',
+        size_max=6,
         color_discrete_map={
             'Bezchybný': 'forestgreen',
             'Veľmi dobrý': 'forestgreen',
